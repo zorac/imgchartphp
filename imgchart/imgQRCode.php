@@ -1,6 +1,6 @@
 <?php
-namespace gchart;
-class gQRCode extends gChart
+namespace imgchart;
+class imgQRCode extends imgChart
 {
 
     function __construct($width = 150, $height = 150)

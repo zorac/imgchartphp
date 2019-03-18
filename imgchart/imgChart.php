@@ -1,5 +1,5 @@
 <?php
-namespace gchart;
+namespace imgchart;
 /**
  * @brief Main class
  *
@@ -7,7 +7,7 @@ namespace gchart;
  *
  * @version 0.5.2
  */
-class gChart
+class imgChart
 {
     /**
      * @brief This variable holds all the chart information.
@@ -20,7 +20,7 @@ class gChart
      * @var string
      * @usedby getUrl()
      */
-    private $baseUrl = "chart.apis.google.com/chart?";
+    private $baseUrl = "image-charts.com/chart?";
 
     /**
      * @brief Data set values.
@@ -30,7 +30,7 @@ class gChart
     protected $values = Array();
 
     /**
-     * @brief Widht of the chart
+     * @brief Width of the chart
      * @var Integer
      */
     private $width;
@@ -708,7 +708,7 @@ class gChart
      */
     public function getUrl()
     {
-        $fullUrl = "http://";
+        $fullUrl = "https://";
         if(isset($this->serverNum))
             $fullUrl .= $this->getServerNumber().".";
         $fullUrl .= $this->baseUrl;
@@ -730,7 +730,7 @@ class gChart
     {
         $code = '<img src="';
         $code .= $this->getUrl().'"';
-        $code .= 'alt="gChartPhp Chart" width='.$this->width.' height='.$this->height.'>';
+        $code .= 'alt="imgChartPhp Chart" width='.$this->width.' height='.$this->height.'>';
         print($code);
     }
     /**
@@ -747,7 +747,7 @@ class gChart
 		header('Content-type: image/png');
 		if ($post) {
 			$this->setDataSetString();
-			$url = 'http://chart.apis.google.com/chart?chid=' . md5(uniqid(rand(), true));
+			$url = 'https://' . $this->baseUrl . 'chid=' . md5(uniqid(rand(), true));
 			$context = stream_context_create(
 				array('http' => array(
 					'method' => 'POST',

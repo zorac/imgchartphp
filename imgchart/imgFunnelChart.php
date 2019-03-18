@@ -1,6 +1,6 @@
 <?php
-namespace gchart;
-class gFunnelChart extends gBarChart
+namespace imgchart;
+class imgFunnelChart extends imgBarChart
 {
     function __construct($width = 200, $height = 200)
     {

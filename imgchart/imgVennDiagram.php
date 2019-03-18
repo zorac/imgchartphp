@@ -1,6 +1,6 @@
 <?php
-namespace gchart;
-class gVennDiagram extends gChart
+namespace imgchart;
+class imgVennDiagram extends imgChart
 {
 
     private $sizes;

@@ -1,6 +1,6 @@
 <?php
-namespace gchart;
-class gLineChart extends gChart
+namespace imgchart;
+class imgLineChart extends imgChart
 {
     public function __construct($width = 200, $height = 200)
     {

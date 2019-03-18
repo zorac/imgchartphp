@@ -1,8 +1,8 @@
 <?php
-namespace gchart;
+namespace imgchart;
 
 
-class gBarChart extends gChart
+class imgBarChart extends imgChart
 {
     /**
      * @brief Constructor for the gBarChart

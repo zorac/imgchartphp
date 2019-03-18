@@ -1,6 +1,6 @@
 <?php
-namespace gchart;
-class gMapChart extends gChart
+namespace imgchart;
+class imgMapChart extends imgChart
 {
     /**
      * @brief Map Chart constructor.

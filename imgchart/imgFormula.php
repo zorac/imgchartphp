@@ -1,6 +1,6 @@
 <?php
-namespace gchart;
-class gFormula extends gChart
+namespace imgchart;
+class imgFormula extends imgChart
 {
     /**
      * @param $widht Integer It is set by default to 0 because the server will size the png automatically
@@ -25,11 +25,11 @@ class gFormula extends gChart
     {
         $code = '<img src="';
         $code .= $this->getUrl().'"';
-        $code .= 'alt="gChartPhp Chart"';
-        if($this->width)
-            $code .= ' width='.$this->width;
-        if($this->height)
-            $code .= ' height='.$this->height;
+        $code .= 'alt="imgChartPhp Chart"';
+        if($this->getWidth())
+            $code .= ' width='.$this->getWidth();
+        if($this->getHeight())
+            $code .= ' height='.$this->getHeight();
         $code .= '>';
         print($code);
     }

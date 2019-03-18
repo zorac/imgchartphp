@@ -1,5 +1,5 @@
 <?php
-namespace gchart;
+namespace imgchart;
 /**
  * @brief Utility class
  *

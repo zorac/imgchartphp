@@ -1,8 +1,8 @@
 {
-    "name": "gChartPhp/gChartPhp",
+    "name": "imgChartPhp/imgChartPhp",
     "description": "PHP Object wrapper for the Google Chart API.",
     "keywords": ["Google Charts", "wrapper", "php", "charts"],
-    "homepage": "https://github.com/pacbard/gChartPhp",
+    "homepage": "https://github.com/obceneikon/imgChartPhp",
     "type": "library",
     "authors": [
         {
@@ -11,6 +11,6 @@
         }
     ],
     "autoload": {
-        "psr-0": {"gchart": ""}
+        "psr-0": {"imgchart": ""}
     }
 }
