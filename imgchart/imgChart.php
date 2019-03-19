@@ -752,7 +752,7 @@ class imgChart
 				array('http' => array(
 					'method' => 'POST',
 					'header' => 'Content-type: application/x-www-form-urlencoded' . "\r\n",
-					'content' => urldecode(http_build_query($this->chart, '', '&')))));
+					'content' => http_build_query($this->chart))));
 				fpassthru(fopen($url, 'r', false, $context));
 		} else {
 			$url = str_replace('&amp;', '&', $this->getUrl());
