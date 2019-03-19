@@ -1,10 +1,15 @@
 {
     "name": "imgchartphp/imgchartphp",
-    "description": "PHP Object wrapper for the Google Chart API.",
-    "keywords": ["Google Charts", "wrapper", "php", "charts"],
+    "description": "PHP Object wrapper for imagecharts, the drop-in replacement for the Google Image Charts API.",
+    "keywords": ["imagecharts", "image-charts", "Google Charts", "Google Image Charts", "wrapper", "php", "charts"],
     "homepage": "https://github.com/obceneikon/imgChartPhp",
     "type": "library",
     "authors": [
+        {
+            "name": "OBCENEIKON",
+            "email": "jerimiah.milton@gmail.com",
+            "homepage": "https://github.com/obceneikon"
+        },
         {
             "name": "pacbard",
             "homepage": "https://github.com/pacbard"

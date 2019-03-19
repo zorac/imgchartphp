@@ -13,6 +13,15 @@ The original project will continue to be mirrored on its <a href="http://code.go
 
 Use the master branch for stable release, the experimental branch for the development release, and the legacy branch for the old release of the wrapper (this branch will not be actively updated).
 
+Enterprise Credentials
+-----------------
+If you've paid for the enterprise version of imagecharts to have the watermark removed. Simply define your account ID and secret key.
+
+Example:
+
+    define('IC_ACCOUNT_ID', 'YourAccountID');
+    define('IC_SECRET_KEY', '123YourSecretKeyabc');
+
 Pie Chart Example
 -----------------
 <img src="https://image-charts.com/chart?cht=p&chs=350x200&chd=t:112,315,66,40&chdl=first|second|third|fourth&chco=ff3344,11ff11,22aacc,3333aa&chl=first|second|third|fourth&image.png"/> 

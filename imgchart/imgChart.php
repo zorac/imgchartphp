@@ -5,10 +5,9 @@ namespace imgchart;
  *
  * This is the mainframe of the wrapper
  *
- * @version 0.5.2
+ * @version 0.7.0
  */
-class imgChart
-{
+abstract class imgChart {
     /**
      * @brief This variable holds all the chart information.
      * @var array
@@ -21,6 +20,33 @@ class imgChart
      * @usedby getUrl()
      */
     private $baseUrl = "image-charts.com/chart?";
+
+    /**
+     * @brief This variable holds the imagecharts enterprise account id.
+     * @var string
+     */
+    private $ic_account_id = NULL;
+    public function setIcAccountId($ic_account_id) {
+        $this->ic_account_id = (defined('IC_ACCOUNT_ID') ? IC_ACCOUNT_ID : $ic_account_id);
+    }
+
+    public function getIcAccountId() {
+        return $this->ic_account_id;
+    }
+
+    /**
+     * @brief This variable holds the imagecharts enterprise secret key.
+     * @var string
+     */
+    private $ic_secret_key = NULL;
+    public function setIcSecretKey($ic_secret_key) {
+        $this->ic_secret_key = (defined('IC_SECRET_KEY') ? IC_SECRET_KEY : $ic_secret_key);
+    }
+
+    public function getIcSecretKey() {
+        return $this->ic_secret_key;
+    }
+
 
     /**
      * @brief Data set values.
@@ -422,7 +448,7 @@ class imgChart
      * @brief Sets chart dimensions.
      *
      * Sets chart dimension using chs parameter. This checks of $width and $height are
-     * defined because in gFormula 0s are used as default values to let the server
+     * defined because in imgFormula 0s are used as default values to let the server
      * autosize the final png image. If only $hegiht is not 0, then the server will use
      * this value as the height of the png image and will autosize the width.
      *
@@ -713,12 +739,8 @@ class imgChart
             $fullUrl .= $this->getServerNumber().".";
         $fullUrl .= $this->baseUrl;
         $this->setDataSetString();
-        $parms = array();
-        foreach ($this->chart as $key => $value)
-        {
-            $parms[] = $key.'='.$value;
-        }
-        return $fullUrl.implode('&amp;', $parms);
+
+        return $fullUrl.$this->sign();
     }
 
     /**
@@ -730,7 +752,7 @@ class imgChart
     {
         $code = '<img src="';
         $code .= $this->getUrl().'"';
-        $code .= 'alt="imgChartPhp Chart" width='.$this->width.' height='.$this->height.'>';
+        $code .= 'alt="img-chart-php Chart" width='.$this->width.' height='.$this->height.'>';
         print($code);
     }
     /**
@@ -747,15 +769,32 @@ class imgChart
 		header('Content-type: image/png');
 		if ($post) {
 			$this->setDataSetString();
-			$url = 'https://' . $this->baseUrl . 'chid=' . md5(uniqid(rand(), true));
+			$url = 'https://' . $this->baseUrl;
 			$context = stream_context_create(
 				array('http' => array(
 					'method' => 'POST',
-					'content' => http_build_query($this->chart))));
+					'header' => 'Content-type: application/x-www-form-urlencoded' . "\r\n",
+					'content' => urldecode($this->sign()))));
 				fpassthru(fopen($url, 'r', false, $context));
 		} else {
 			$url = str_replace('&amp;', '&', $this->getUrl());
 			readfile($url);
 		}
 	}
+
+    /**
+     * @brief Returns the query string, if enterprise login information is found it returns the signed hash query string
+     *
+     *
+     *
+     * @return string
+     */
+	private function sign() {
+	    if (empty($this->ic_account_id) && empty($this->ic_secret_key))
+	        return http_build_query($this->chart);
+
+	    $this->setProperty('icac', $this->ic_account_id);
+
+	    return hash_hmac('sha256', http_build_query($this->chart), $this->ic_secret_key);
+    }
 }

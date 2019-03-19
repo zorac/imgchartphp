@@ -3,10 +3,12 @@ namespace imgchart;
 class imgQRCode extends imgChart
 {
 
-    function __construct($width = 150, $height = 150)
+    function __construct($width = 150, $height = 150, $ic_account_id = null, $ic_secret_key = null)
     {
         $this->setDimensions($width, $height);
         $this->setProperty('cht','qr');
+        $this->setIcAccountId($ic_account_id);
+        $this->setIcSecretKey($ic_secret_key);
     }
 
     public function setQRCode($QRCode)

@@ -2,10 +2,12 @@
 namespace imgchart;
 class imgPieChart extends imgChart
 {
-    public function __construct($width = 350, $height = 200)
+    public function __construct($width = 350, $height = 200, $ic_account_id = null, $ic_secret_key = null)
     {
         $this->setProperty('cht', 'p');
         $this->setDimensions($width, $height);
+        $this->setIcAccountId($ic_account_id);
+        $this->setIcSecretKey($ic_secret_key);
     }
     public function getApplicableLabels($labels)
     {
