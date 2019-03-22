@@ -19,7 +19,7 @@ abstract class imgChart {
      * @var string
      * @usedby getUrl()
      */
-    private $baseUrl = "image-charts.com/chart?";
+    private $baseUrl = "https://image-charts.com/chart?";
 
     /**
      * @brief This variable holds the imagecharts enterprise account id.
@@ -487,7 +487,7 @@ abstract class imgChart {
      */
     public function setLegend($labels)
     {
-        $this->setProperty('chdl', urlencode($this->encodeData($this->getApplicableLabels($labels),"|")));
+        $this->setProperty('chdl', $this->encodeData($this->getApplicableLabels($labels),"|"));
     }
     /**
      * @brief Sets the position and the order of the legend
@@ -734,13 +734,9 @@ abstract class imgChart {
      */
     public function getUrl()
     {
-        $fullUrl = "https://";
-        if(isset($this->serverNum))
-            $fullUrl .= $this->getServerNumber().".";
-        $fullUrl .= $this->baseUrl;
         $this->setDataSetString();
 
-        return $fullUrl.$this->sign();
+        return $this->baseUrl.$this->sign();
     }
 
     /**
@@ -769,18 +765,38 @@ abstract class imgChart {
 		header('Content-type: image/png');
 		if ($post) {
 			$this->setDataSetString();
-			$url = 'https://' . $this->baseUrl;
 			$context = stream_context_create(
 				array('http' => array(
 					'method' => 'POST',
 					'header' => 'Content-type: application/x-www-form-urlencoded' . "\r\n",
-					'content' => urldecode($this->sign()))));
-				fpassthru(fopen($url, 'r', false, $context));
+					'content' => $this->sign())));
+				fpassthru(fopen(substr($this->baseUrl, 0, -1), 'r', false, $context));
 		} else {
 			$url = str_replace('&amp;', '&', $this->getUrl());
 			readfile($url);
 		}
 	}
+
+	public function renderImageString($post = false, $encode = true) {
+        ob_start();
+        if ($post) {
+            $this->setDataSetString();
+            $context = stream_context_create(
+                array('http' => array(
+                    'method' => 'POST',
+                    'header' => 'Content-type: application/x-www-form-urlencoded' . "\r\n",
+                    'content' => $this->sign())));
+            fpassthru(fopen(substr($this->baseUrl, 0, -1), 'r', false, $context));
+        } else {
+            $url = str_replace('&amp;', '&', $this->getUrl());
+            readfile($url);
+        }
+        $image = ob_get_contents();
+        $image = ($encode ? base64_encode($image) : $image);
+        ob_end_clean();
+
+        return $image;
+    }
 
     /**
      * @brief Returns the query string, if enterprise login information is found it returns the signed hash query string
@@ -795,6 +811,9 @@ abstract class imgChart {
 
 	    $this->setProperty('icac', $this->ic_account_id);
 
-	    return hash_hmac('sha256', http_build_query($this->chart), $this->ic_secret_key);
+	    $rawQueryString = http_build_query($this->chart);
+	    $signature = hash_hmac('sha256', $rawQueryString, $this->ic_secret_key);
+
+	    return $rawQueryString . '&ichm=' . $signature;
     }
 }
