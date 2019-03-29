@@ -13,15 +13,12 @@ class imgLineChart extends imgChart
     /**
      * @brief Specifies chart line styles.
      *
-     * @param $lineStyle String A string value to apply to a slice or bar. Labels are applied consecutively to the data
-     *                    points in chd. If you have multiple series (for a concentric pie chart, for example), labels
-     *                    are applied to all points in all sequences, in the order specified in chd. Use a pipe
-     *                    delimiter ( | ) between each label. Specify a missing intervening value by using two
-     *                    consecutive pipe characters with no space between them: || . You do not need to label all
-     *                    slices.
+     * @param $lineStyle String You can specify line thickness and solid/dashed style with the chls parameter. This
+     *                   parameter can only be used to style lines in line or radar charts; you cannot use it to style
+     *                   the line in a compound chart lines, unless the base type of the compound chart is a line chart.
      *
      *                    Refer to official documentation at:
-     *                    https://documentation.image-charts.com/reference/chart-label/
+     *                    https://documentation.image-charts.com/line-charts/#line-styles
      */
     public function addChartLineStyle($lineStyle)
     {
