@@ -7,6 +7,12 @@ namespace imgchart;
  *
  * @version 0.7.0
  */
+
+/**
+ * TODO: Add imagechart specific parameters
+ *      Update documentation
+ */
+
 abstract class imgChart {
     /**
      * @brief This variable holds all the chart information.
@@ -26,11 +32,13 @@ abstract class imgChart {
      * @var string
      */
     private $ic_account_id = NULL;
-    public function setIcAccountId($ic_account_id) {
+    public function setIcAccountId($ic_account_id)
+    {
         $this->ic_account_id = (defined('IC_ACCOUNT_ID') ? IC_ACCOUNT_ID : $ic_account_id);
     }
 
-    public function getIcAccountId() {
+    public function getIcAccountId()
+    {
         return $this->ic_account_id;
     }
 
@@ -39,11 +47,13 @@ abstract class imgChart {
      * @var string
      */
     private $ic_secret_key = NULL;
-    public function setIcSecretKey($ic_secret_key) {
+    public function setIcSecretKey($ic_secret_key)
+    {
         $this->ic_secret_key = (defined('IC_SECRET_KEY') ? IC_SECRET_KEY : $ic_secret_key);
     }
 
-    public function getIcSecretKey() {
+    public function getIcSecretKey()
+    {
         return $this->ic_secret_key;
     }
 
@@ -64,6 +74,7 @@ abstract class imgChart {
     {
         $this->width = $width;
     }
+
     public function getWidth()
     {
         return($this->width);
@@ -78,6 +89,7 @@ abstract class imgChart {
     {
         $this->height = $height;
     }
+
     public function getHeight()
     {
         return($this->height);
@@ -92,6 +104,7 @@ abstract class imgChart {
     {
         $this->precision = $precision;
     }
+
     public function getPrecision()
     {
         return $this->precision;
@@ -106,6 +119,7 @@ abstract class imgChart {
         if (!isset($this->dataCount))
             $this->dataCount = $dataCount;
     }
+
     public function getDataCount()
     {
         return $this->dataCount;
@@ -120,33 +134,41 @@ abstract class imgChart {
     {
         $this->dataEncodingType = $newEncodeType;
     }
+
     public function getEncodingType()
     {
         return ($this->dataEncodingType);
     }
+
     protected function encodeData($data, $separator, $encodigData = '')
     {
         if ($encodigData == 's')
         {
             $data = $this->simpleEncodeData($data);
             $separator = '';
-        } else if ($encodigData == 'e')
+        }
+        else if ($encodigData == 'e')
         {
             $data = $this->extendedEncodeData($data);
             $separator = '';
-        } else if ($encodigData == 't')
+        }
+        else if ($encodigData == 't')
         {
             $data = $this->textEncodeData($data);
         }
+
         $retStr = $this->separateData($data, $separator, "|");
         $retStr = trim($retStr, "|");
+
         return $retStr;
     }
+
     protected function separateData($data, $separator, $datasetSeparator)
     {
         $retStr = "";
         if(!is_array($data))
             return $data;
+
         foreach($data as $currValue)
         {
             if(is_array($currValue))
@@ -154,8 +176,10 @@ abstract class imgChart {
             else
                 $retStr .= $currValue.$separator;
         }
+
         $retStr = trim($retStr, $separator);
         $retStr .= $datasetSeparator;
+
         return $retStr;
     }
 
@@ -168,6 +192,7 @@ abstract class imgChart {
     {
         array_push($this->values, $data);
     }
+
     /**
      * @brief Adds a hidden data set.
      *
@@ -185,6 +210,7 @@ abstract class imgChart {
     {
         $this->values = Array();
     }
+
     /**
      * @brief Encodes the data as Basic Text and Text Format with Custom Scaling.
      *
@@ -197,11 +223,11 @@ abstract class imgChart {
     private function textEncodeData($data)
     {
         if (isset($this->chart['chds']))
-        {
             return $data;
-        }
+
         $encodedData = array();
         $max = utility::getMaxOfArray($data);
+
         if ($max > 100)
         {
             $rate = $max / 100;
@@ -211,22 +237,20 @@ abstract class imgChart {
                 {
                     $encodedData2 = array();
                     foreach ($array as $elem)
-                    {
                         array_push($encodedData2, round($elem / $rate, $this->getPrecision()));
-                    }
+
                     array_push($encodedData, $encodedData2);
                 }
                 else
-                {
                     array_push($encodedData, round($array / $rate, $this->getPrecision()));
-                }
             }
-        } else
-        {
-            $encodedData = $data;
         }
+        else
+            $encodedData = $data;
+
         return $encodedData;
     }
+
     /**
      * @brief Encodes the data as Simple Text.
      * This specifies integer values from 0-61, inclusive, encoded by a single alphanumeric character.
@@ -252,14 +276,17 @@ abstract class imgChart {
                         $index = (int)$elem/$rate;
                         array_push($encodedData2, $encode_string[$index]);
                     }
+
                     array_push($encodedData, $encodedData2);
-                } else
+                }
+                else
                 {
                     $index = (int)$array/$rate;
                     array_push($encodedData, $encode_string[$index]);
                 }
             }
-        } else
+        }
+        else
         {
             foreach($data as $array)
             {
@@ -270,23 +297,61 @@ abstract class imgChart {
                     {
                         array_push($encodedData2, $encode_string[$elem]);
                     }
+
                     array_push($encodedData, $encodedData2);
-                } else
-                {
-                    array_push($encodedData, $encode_string[$array]);
                 }
+                else
+                    array_push($encodedData, $encode_string[$array]);
             }
         }
+
         return $encodedData;
     }
+
+    /**
+     * @brief Specifies the chart label.
+     *
+     * @param $chartLabel String A string value to apply to a slice or bar. Labels are applied consecutively to the data
+     *                    points in chd. If you have multiple series (for a concentric pie chart, for example), labels
+     *                    are applied to all points in all sequences, in the order specified in chd. Use a pipe
+     *                    delimiter ( | ) between each label. Specify a missing intervening value by using two
+     *                    consecutive pipe characters with no space between them: || . You do not need to label all
+     *                    slices.
+     *
+     *                    Refer to official documentation at:
+     *                    https://documentation.image-charts.com/reference/chart-label/
+     */
+    public function addChartLabel($chartLabel)
+    {
+        $this->setProperty('chl', $this->encodeData($chartLabel, '|'), true);
+    }
+
+    /**
+     * @brief Specifies the chart label.
+     *
+     * @param $chartLabel String A string value to apply to a slice or bar. Labels are applied consecutively to the data
+     *                    points in chd. If you have multiple series (for a concentric pie chart, for example), labels
+     *                    are applied to all points in all sequences, in the order specified in chd. Use a pipe
+     *                    delimiter ( | ) between each label. Specify a missing intervening value by using two
+     *                    consecutive pipe characters with no space between them: || . You do not need to label all
+     *                    slices.
+     *
+     *                    Refer to official documentation at:
+     *                    https://documentation.image-charts.com/reference/chart-label/
+     */
+    public function addChartLabel($chartLabel)
+    {
+        $this->setProperty('chl', $this->encodeData($chartLabel, '|'), true);
+    }
+
     /**
      * @brief Specifies the style of an axis.
      *
      * @param $axisIndex Integer This is a zero-based index into the axis array specified by setVisibleAxes
-     * @param $axisStyle String You can specify the font size, color, and alignment for axis labels, both custom labels and 
-     *                   default label values. All labels on the same axis have the same format. If you have multiple 
-     *                   copies of an axis, you can format each one differently. You can also specify the format of a 
-     *                   label string, for example to show currency symbols or trailing zeroes.
+     * @param $axisStyle String You can specify the font size, color, and alignment for axis labels, both custom labels
+     *                   and default label values. All labels on the same axis have the same format. If you have
+     *                   multiple copies of an axis, you can format each one differently. You can also specify the
+     *                   format of a label string, for example to show currency symbols or trailing zeroes.
      *                   By default, the top and bottom axes do not show tick marks by the values, while the left and 
      *                   right axes do show them.
      *
@@ -297,6 +362,7 @@ abstract class imgChart {
     {
         $this->setProperty('chxs', $axisIndex.','.$this->encodeData($axisStyle, '|'), true);
     }
+
     /**
      * @brief Specifies the style of an axis.
      *
@@ -312,7 +378,8 @@ abstract class imgChart {
     {
         $this->setProperty('chxtc', $axisIndex.','.$this->encodeData($axisTickLength, '|'), true);
     }
-     /* 
+
+    /**
      * Extended Text.
      *
      * This specifies integer values from 0-4095, inclusive, encoded by two alphanumeric characters.
@@ -321,73 +388,76 @@ abstract class imgChart {
      */
     private function extendedEncodeData($data)
     {
-        $encode_string='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.';
+        $encode_string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.';
         $max = utility::getMaxOfArray($data);
         $encodedData = array();
-        if ($max > 4095)
-        {
-            $rate = $max/4095.0;
-            foreach ($data as $array)
-                if (is_array($array))
-                {
+
+        if ($max > 4095) {
+            $rate = $max / 4095.0;
+
+            foreach ($data as $array) {
+                if (is_array($array)) {
                     $encodedData2 = array();
-                    foreach ($array as $elem)
-                    {
-                        $toEncode=(int)$elem/$rate;
-                        $s='';
-                        for ($i=0;$i<2;++$i)
-                        {
-                            $m = $toEncode%64;
-                            $toEncode/=64;
-                            $s = $encode_string[$m].$s;
-                        }
-                        array_push($encodedData2, $s);
-                    }
-                    array_push($encodedData, $encodedData2);
-                } else
-                {
-                    $toEncode=(int)$array/$rate;
-                    $s='';
-                    $encodedData2 = array();
-                    for ($i=0;$i<2;++$i)
-                    {
-                        $m = $toEncode%64;
-                        $toEncode/=64;
-                        $s = $encode_string[$m].$s;
-                    }
-                    array_push($encodedData, $s);
-                }
-        } else
-        {
-            foreach ($data as $array)
-                if (is_array($array))
-                {
-                    foreach ($array as $elem)
-                    {
-                        $s='';
-                        $toEncode = $elem;
-                        for ($i=0; $i<2; ++$i)
-                        {
-                            $m = $toEncode%64;
+                    foreach ($array as $elem) {
+                        $toEncode = (int)$elem / $rate;
+                        $s = '';
+
+                        for ($i = 0; $i < 2; ++$i) {
+                            $m = $toEncode % 64;
                             $toEncode /= 64;
-                            $s = $encode_string[$m].$s;
+                            $s = $encode_string[$m] . $s;
                         }
+
                         array_push($encodedData2, $s);
                     }
+
                     array_push($encodedData, $encodedData2);
-                } else
-                {
-                    $s='';
-                    $toEncode = $array;
-                    for ($i=0; $i<2; ++$i)
-                    {
-                        $m = $toEncode%64;
+                } else {
+                    $toEncode = (int)$array / $rate;
+                    $s = '';
+
+                    $encodedData2 = array();
+                    for ($i = 0; $i < 2; ++$i) {
+                        $m = $toEncode % 64;
                         $toEncode /= 64;
-                        $s = $encode_string[$m].$s;
+                        $s = $encode_string[$m] . $s;
                     }
+
                     array_push($encodedData, $s);
                 }
+            }
+        } else {
+            foreach ($data as $array) {
+                if (is_array($array)) {
+                    foreach ($array as $elem) {
+                        $s = '';
+                        $toEncode = $elem;
+
+                        for ($i = 0; $i < 2; ++$i) {
+                            $m = $toEncode % 64;
+                            $toEncode /= 64;
+                            $s = $encode_string[$m] . $s;
+                        }
+
+                        array_push($encodedData2, $s);
+                    }
+
+                    array_push($encodedData, $encodedData2);
+                } else {
+                    $s = '';
+                    $toEncode = $array;
+
+                    for ($i = 0; $i < 2; ++$i) {
+                        $m = $toEncode % 64;
+                        $toEncode /= 64;
+                        $s = $encode_string[$m] . $s;
+                    }
+
+                    array_push($encodedData, $s);
+                }
+            }
         }
+
         return $encodedData;
     }
 
@@ -404,6 +474,7 @@ abstract class imgChart {
      * @var Integer
      */
     private $serverNum;
+
     /**
      * @brief Sets server number processing the chart.
      * @param $newServerNum Integer The server number. The function will scale this number to the range 0-9
@@ -412,6 +483,7 @@ abstract class imgChart {
     {
         $this->serverNum = $newServerNum % 10;
     }
+
     /**
      * @brief Returns the server number processing the chart
      * @return Integer
@@ -436,6 +508,7 @@ abstract class imgChart {
             $this->chart[$key] = $value;
         }
     }
+
 	/**
 	 * @brief Gets a chart property
 	 * @param $key String Name of the chart parameter
@@ -444,6 +517,7 @@ abstract class imgChart {
 		if (isset($this->chart[$key]))
 			return ($this->chart[$key]);
 	}
+
     /**
      * @brief Sets chart dimensions.
      *
@@ -468,6 +542,7 @@ abstract class imgChart {
             $this->setProperty('chs', $height);
         }
     }
+
     /**
      * @brief Sets the colors for element of the chart.
      *
@@ -480,6 +555,7 @@ abstract class imgChart {
     {
         $this->setProperty('chco', $this->encodeData($this->getApplicableLabels($colors),","));
     }
+
     /**
      * @brief Sets the labels for the legend
      *
@@ -489,6 +565,7 @@ abstract class imgChart {
     {
         $this->setProperty('chdl', $this->encodeData($this->getApplicableLabels($labels),"|"));
     }
+
     /**
      * @brief Sets the position and the order of the legend
      *
@@ -506,6 +583,7 @@ abstract class imgChart {
             $this->setProperty('chdlp', $position);
         }
     }
+
     /**
      * @brief Sets the title.
      *
@@ -519,6 +597,7 @@ abstract class imgChart {
         $title = str_replace(" ", "+", $title);
         $this->setProperty('chtt', $title);
     }
+
     /**
      *	@brief Sets font size and color of the title
      *
@@ -529,6 +608,7 @@ abstract class imgChart {
     {
         $this->setProperty('chts', $color.','.$size);
     }
+
     /**
      * @brief Specifies the size of the chart's margins, in pixels.
      *
@@ -545,6 +625,7 @@ abstract class imgChart {
         if (!empty($legendMargins))
             $this->setProperty('chma', $this->encodeData($legendMargins, ','), true);
     }
+
     /**
      * @brief Sets visible axes.
      *
