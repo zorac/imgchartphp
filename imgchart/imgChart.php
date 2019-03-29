@@ -327,24 +327,6 @@ abstract class imgChart {
     }
 
     /**
-     * @brief Specifies the chart label.
-     *
-     * @param $chartLabel String A string value to apply to a slice or bar. Labels are applied consecutively to the data
-     *                    points in chd. If you have multiple series (for a concentric pie chart, for example), labels
-     *                    are applied to all points in all sequences, in the order specified in chd. Use a pipe
-     *                    delimiter ( | ) between each label. Specify a missing intervening value by using two
-     *                    consecutive pipe characters with no space between them: || . You do not need to label all
-     *                    slices.
-     *
-     *                    Refer to official documentation at:
-     *                    https://documentation.image-charts.com/reference/chart-label/
-     */
-    public function addChartLabel($chartLabel)
-    {
-        $this->setProperty('chl', $this->encodeData($chartLabel, '|'), true);
-    }
-
-    /**
      * @brief Specifies the style of an axis.
      *
      * @param $axisIndex Integer This is a zero-based index into the axis array specified by setVisibleAxes
