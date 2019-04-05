@@ -140,19 +140,19 @@ abstract class imgChart {
         return ($this->dataEncodingType);
     }
 
-    protected function encodeData($data, $separator, $encodigData = '')
+    protected function encodeData($data, $separator, $encodingData = '')
     {
-        if ($encodigData == 's')
+        if ($encodingData == 's')
         {
             $data = $this->simpleEncodeData($data);
             $separator = '';
         }
-        else if ($encodigData == 'e')
+        else if ($encodingData == 'e')
         {
             $data = $this->extendedEncodeData($data);
             $separator = '';
         }
-        else if ($encodigData == 't')
+        else if ($encodingData == 't' || $encodingData == 'a')
         {
             $data = $this->textEncodeData($data);
         }
@@ -671,12 +671,26 @@ abstract class imgChart {
      * Note that this does not change the axis range; to change the axis range, you must
      * use the setAxisRange function.
      *
-     * @param $startVal Integer A number, definig the low value for the data set. Usually, it is the same as $startVal in addAxisRange
-     * @param $endVal Integer A number, definig the high value for the data set. Usually, it is the same as $endVal in addAxisRange
+     * @param $startVal Integer|String A number, defining the low value for the data set. Usually, it is the same as
+     *                                 $startVal in addAxisRange. If this is an "a" then we'll set this to automatic
+     *                                 scaling:
+     *      https://documentation.image-charts.com/reference/data-format/#text-format-with-automatic-scaling
+     * @param $endVal Integer A number, defining the high value for the data set. Usually, it is the same as $endVal in
+     *                        addAxisRange
      */
-    public function setDataRange($startVal, $endVal)
+    public function setDataRange($startVal, $endVal = '')
     {
-        $this->setProperty('chds', $startVal.','.$endVal);
+        if ($startVal == 'a')
+            $this->setProperty('chds', 'a');
+        else {
+            if (!trim($endVal)) {
+                $msg = 'Uncaught ArgumentCountError: Too few arguments to function ' . __METHOD__ .'(), ' .
+                       func_num_args() . ' passed in ' . __FILE__ . ' on line ' . __LINE__ . ' and exactly 2 expected' .
+                       ' in ' . debug_print_backtrace();
+                trigger_error($msg, E_USER_ERROR);
+            } else
+                $this->setProperty('chds', $startVal.','.$endVal);
+        }
     }
     /**
      * @brief Adds the background fill
@@ -832,6 +846,7 @@ abstract class imgChart {
 				array('http' => array(
 					'method' => 'POST',
 					'header' => 'Content-type: application/x-www-form-urlencoded' . "\r\n",
+					'ignore_errors' => ((defined('IC_SHOW_ERRORS') && IC_SHOW_ERRORS) ? true : false),
 					'content' => $this->sign())));
 				fpassthru(fopen(substr($this->baseUrl, 0, -1), 'r', false, $context));
 		} else {
@@ -848,6 +863,7 @@ abstract class imgChart {
                 array('http' => array(
                     'method' => 'POST',
                     'header' => 'Content-type: application/x-www-form-urlencoded' . "\r\n",
+                    'ignore_errors' => ((defined('IC_SHOW_ERRORS') && IC_SHOW_ERRORS) ? true : false),
                     'content' => $this->sign())));
             fpassthru(fopen(substr($this->baseUrl, 0, -1), 'r', false, $context));
         } else {
@@ -869,13 +885,34 @@ abstract class imgChart {
      * @return string
      */
 	private function sign() {
-	    if (empty($this->ic_account_id) && empty($this->ic_secret_key))
-	        return http_build_query($this->chart);
+	    if (empty($this->ic_account_id) && empty($this->ic_secret_key)) {
+            // RFC3986 ensures spaces are correctly encoded as %20
+            $rawQueryString = http_build_query($this->chart, null, ini_get('arg_separator.output'), PHP_QUERY_RFC3986);
+
+            // decode parentheses gobbled up by the query builder
+            $rawQueryString = str_replace('%28', '(', $rawQueryString);
+            $rawQueryString = str_replace('%29', ')', $rawQueryString);
+
+            // imagecharts doesn't seem to like encoded asterisks, so let's decode them
+            $rawQueryString = str_replace('%2A', '*', $rawQueryString);
+
+            return $rawQueryString;
+        }
 
 	    $this->setProperty('icac', $this->ic_account_id);
 
-	    $rawQueryString = http_build_query($this->chart);
+        // RFC3986 ensures spaces are correctly encoded as %20
+        $rawQueryString = http_build_query($this->chart, null, ini_get('arg_separator.output'), PHP_QUERY_RFC3986);
+
+        // decode parentheses gobbled up by the query builder
+        $rawQueryString = str_replace('%28', '(', $rawQueryString);
+        $rawQueryString = str_replace('%29', ')', $rawQueryString);
+
+        // imagecharts doesn't seem to like encoded asterisks, so let's decode them
+        $rawQueryString = str_replace('%2A', '*', $rawQueryString);
+
 	    $signature = hash_hmac('sha256', $rawQueryString, $this->ic_secret_key);
+	    error_log($rawQueryString . '&ichm=' . $signature);
 
 	    return $rawQueryString . '&ichm=' . $signature;
     }
