@@ -1,14 +1,19 @@
 <?php
-namespace gchart;
+namespace imgchart;
 /**
  * @brief Main class
  *
  * This is the mainframe of the wrapper
  *
- * @version 0.5.2
+ * @version 0.7.0
  */
-class gChart
-{
+
+/**
+ * TODO: Add imagechart specific parameters
+ *      Update documentation
+ */
+
+abstract class imgChart {
     /**
      * @brief This variable holds all the chart information.
      * @var array
@@ -20,7 +25,38 @@ class gChart
      * @var string
      * @usedby getUrl()
      */
-    private $baseUrl = "chart.apis.google.com/chart?";
+    private $baseUrl = "https://image-charts.com/chart?";
+
+    /**
+     * @brief This variable holds the imagecharts enterprise account id.
+     * @var string
+     */
+    private $ic_account_id = NULL;
+    public function setIcAccountId($ic_account_id)
+    {
+        $this->ic_account_id = (defined('IC_ACCOUNT_ID') ? IC_ACCOUNT_ID : $ic_account_id);
+    }
+
+    public function getIcAccountId()
+    {
+        return $this->ic_account_id;
+    }
+
+    /**
+     * @brief This variable holds the imagecharts enterprise secret key.
+     * @var string
+     */
+    private $ic_secret_key = NULL;
+    public function setIcSecretKey($ic_secret_key)
+    {
+        $this->ic_secret_key = (defined('IC_SECRET_KEY') ? IC_SECRET_KEY : $ic_secret_key);
+    }
+
+    public function getIcSecretKey()
+    {
+        return $this->ic_secret_key;
+    }
+
 
     /**
      * @brief Data set values.
@@ -30,7 +66,7 @@ class gChart
     protected $values = Array();
 
     /**
-     * @brief Widht of the chart
+     * @brief Width of the chart
      * @var Integer
      */
     private $width;
@@ -38,6 +74,7 @@ class gChart
     {
         $this->width = $width;
     }
+
     public function getWidth()
     {
         return($this->width);
@@ -52,6 +89,7 @@ class gChart
     {
         $this->height = $height;
     }
+
     public function getHeight()
     {
         return($this->height);
@@ -66,6 +104,7 @@ class gChart
     {
         $this->precision = $precision;
     }
+
     public function getPrecision()
     {
         return $this->precision;
@@ -80,6 +119,7 @@ class gChart
         if (!isset($this->dataCount))
             $this->dataCount = $dataCount;
     }
+
     public function getDataCount()
     {
         return $this->dataCount;
@@ -94,33 +134,41 @@ class gChart
     {
         $this->dataEncodingType = $newEncodeType;
     }
+
     public function getEncodingType()
     {
         return ($this->dataEncodingType);
     }
-    protected function encodeData($data, $separator, $encodigData = '')
+
+    protected function encodeData($data, $separator, $encodingData = '')
     {
-        if ($encodigData == 's')
+        if ($encodingData == 's')
         {
             $data = $this->simpleEncodeData($data);
             $separator = '';
-        } else if ($encodigData == 'e')
+        }
+        else if ($encodingData == 'e')
         {
             $data = $this->extendedEncodeData($data);
             $separator = '';
-        } else if ($encodigData == 't')
+        }
+        else if ($encodingData == 't' || $encodingData == 'a')
         {
             $data = $this->textEncodeData($data);
         }
+
         $retStr = $this->separateData($data, $separator, "|");
         $retStr = trim($retStr, "|");
+
         return $retStr;
     }
+
     protected function separateData($data, $separator, $datasetSeparator)
     {
         $retStr = "";
         if(!is_array($data))
             return $data;
+
         foreach($data as $currValue)
         {
             if(is_array($currValue))
@@ -128,8 +176,10 @@ class gChart
             else
                 $retStr .= $currValue.$separator;
         }
+
         $retStr = trim($retStr, $separator);
         $retStr .= $datasetSeparator;
+
         return $retStr;
     }
 
@@ -142,6 +192,7 @@ class gChart
     {
         array_push($this->values, $data);
     }
+
     /**
      * @brief Adds a hidden data set.
      *
@@ -159,6 +210,7 @@ class gChart
     {
         $this->values = Array();
     }
+
     /**
      * @brief Encodes the data as Basic Text and Text Format with Custom Scaling.
      *
@@ -171,11 +223,11 @@ class gChart
     private function textEncodeData($data)
     {
         if (isset($this->chart['chds']))
-        {
             return $data;
-        }
+
         $encodedData = array();
         $max = utility::getMaxOfArray($data);
+
         if ($max > 100)
         {
             $rate = $max / 100;
@@ -185,22 +237,20 @@ class gChart
                 {
                     $encodedData2 = array();
                     foreach ($array as $elem)
-                    {
                         array_push($encodedData2, round($elem / $rate, $this->getPrecision()));
-                    }
+
                     array_push($encodedData, $encodedData2);
                 }
                 else
-                {
                     array_push($encodedData, round($array / $rate, $this->getPrecision()));
-                }
             }
-        } else
-        {
-            $encodedData = $data;
         }
+        else
+            $encodedData = $data;
+
         return $encodedData;
     }
+
     /**
      * @brief Encodes the data as Simple Text.
      * This specifies integer values from 0-61, inclusive, encoded by a single alphanumeric character.
@@ -226,14 +276,17 @@ class gChart
                         $index = (int)$elem/$rate;
                         array_push($encodedData2, $encode_string[$index]);
                     }
+
                     array_push($encodedData, $encodedData2);
-                } else
+                }
+                else
                 {
                     $index = (int)$array/$rate;
                     array_push($encodedData, $encode_string[$index]);
                 }
             }
-        } else
+        }
+        else
         {
             foreach($data as $array)
             {
@@ -244,23 +297,43 @@ class gChart
                     {
                         array_push($encodedData2, $encode_string[$elem]);
                     }
+
                     array_push($encodedData, $encodedData2);
-                } else
-                {
-                    array_push($encodedData, $encode_string[$array]);
                 }
+                else
+                    array_push($encodedData, $encode_string[$array]);
             }
         }
+
         return $encodedData;
     }
+
+    /**
+     * @brief Specifies the chart label.
+     *
+     * @param $chartLabel String A string value to apply to a slice or bar. Labels are applied consecutively to the data
+     *                    points in chd. If you have multiple series (for a concentric pie chart, for example), labels
+     *                    are applied to all points in all sequences, in the order specified in chd. Use a pipe
+     *                    delimiter ( | ) between each label. Specify a missing intervening value by using two
+     *                    consecutive pipe characters with no space between them: || . You do not need to label all
+     *                    slices.
+     *
+     *                    Refer to official documentation at:
+     *                    https://documentation.image-charts.com/reference/chart-label/
+     */
+    public function addChartLabel($chartLabel)
+    {
+        $this->setProperty('chl', $this->encodeData($chartLabel, '|'), true);
+    }
+
     /**
      * @brief Specifies the style of an axis.
      *
      * @param $axisIndex Integer This is a zero-based index into the axis array specified by setVisibleAxes
-     * @param $axisStyle String You can specify the font size, color, and alignment for axis labels, both custom labels and 
-     *                   default label values. All labels on the same axis have the same format. If you have multiple 
-     *                   copies of an axis, you can format each one differently. You can also specify the format of a 
-     *                   label string, for example to show currency symbols or trailing zeroes.
+     * @param $axisStyle String You can specify the font size, color, and alignment for axis labels, both custom labels
+     *                   and default label values. All labels on the same axis have the same format. If you have
+     *                   multiple copies of an axis, you can format each one differently. You can also specify the
+     *                   format of a label string, for example to show currency symbols or trailing zeroes.
      *                   By default, the top and bottom axes do not show tick marks by the values, while the left and 
      *                   right axes do show them.
      *
@@ -271,6 +344,7 @@ class gChart
     {
         $this->setProperty('chxs', $axisIndex.','.$this->encodeData($axisStyle, '|'), true);
     }
+
     /**
      * @brief Specifies the style of an axis.
      *
@@ -286,7 +360,8 @@ class gChart
     {
         $this->setProperty('chxtc', $axisIndex.','.$this->encodeData($axisTickLength, '|'), true);
     }
-     /* 
+
+    /**
      * Extended Text.
      *
      * This specifies integer values from 0-4095, inclusive, encoded by two alphanumeric characters.
@@ -295,73 +370,76 @@ class gChart
      */
     private function extendedEncodeData($data)
     {
-        $encode_string='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.';
+        $encode_string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.';
         $max = utility::getMaxOfArray($data);
         $encodedData = array();
-        if ($max > 4095)
-        {
-            $rate = $max/4095.0;
-            foreach ($data as $array)
-                if (is_array($array))
-                {
+
+        if ($max > 4095) {
+            $rate = $max / 4095.0;
+
+            foreach ($data as $array) {
+                if (is_array($array)) {
                     $encodedData2 = array();
-                    foreach ($array as $elem)
-                    {
-                        $toEncode=(int)$elem/$rate;
-                        $s='';
-                        for ($i=0;$i<2;++$i)
-                        {
-                            $m = $toEncode%64;
-                            $toEncode/=64;
-                            $s = $encode_string[$m].$s;
-                        }
-                        array_push($encodedData2, $s);
-                    }
-                    array_push($encodedData, $encodedData2);
-                } else
-                {
-                    $toEncode=(int)$array/$rate;
-                    $s='';
-                    $encodedData2 = array();
-                    for ($i=0;$i<2;++$i)
-                    {
-                        $m = $toEncode%64;
-                        $toEncode/=64;
-                        $s = $encode_string[$m].$s;
-                    }
-                    array_push($encodedData, $s);
-                }
-        } else
-        {
-            foreach ($data as $array)
-                if (is_array($array))
-                {
-                    foreach ($array as $elem)
-                    {
-                        $s='';
-                        $toEncode = $elem;
-                        for ($i=0; $i<2; ++$i)
-                        {
-                            $m = $toEncode%64;
+                    foreach ($array as $elem) {
+                        $toEncode = (int)$elem / $rate;
+                        $s = '';
+
+                        for ($i = 0; $i < 2; ++$i) {
+                            $m = $toEncode % 64;
                             $toEncode /= 64;
-                            $s = $encode_string[$m].$s;
+                            $s = $encode_string[$m] . $s;
                         }
+
                         array_push($encodedData2, $s);
                     }
+
                     array_push($encodedData, $encodedData2);
-                } else
-                {
-                    $s='';
-                    $toEncode = $array;
-                    for ($i=0; $i<2; ++$i)
-                    {
-                        $m = $toEncode%64;
+                } else {
+                    $toEncode = (int)$array / $rate;
+                    $s = '';
+
+                    $encodedData2 = array();
+                    for ($i = 0; $i < 2; ++$i) {
+                        $m = $toEncode % 64;
                         $toEncode /= 64;
-                        $s = $encode_string[$m].$s;
+                        $s = $encode_string[$m] . $s;
                     }
+
                     array_push($encodedData, $s);
                 }
+            }
+        } else {
+            foreach ($data as $array) {
+                if (is_array($array)) {
+                    foreach ($array as $elem) {
+                        $s = '';
+                        $toEncode = $elem;
+
+                        for ($i = 0; $i < 2; ++$i) {
+                            $m = $toEncode % 64;
+                            $toEncode /= 64;
+                            $s = $encode_string[$m] . $s;
+                        }
+
+                        array_push($encodedData2, $s);
+                    }
+
+                    array_push($encodedData, $encodedData2);
+                } else {
+                    $s = '';
+                    $toEncode = $array;
+
+                    for ($i = 0; $i < 2; ++$i) {
+                        $m = $toEncode % 64;
+                        $toEncode /= 64;
+                        $s = $encode_string[$m] . $s;
+                    }
+
+                    array_push($encodedData, $s);
+                }
+            }
         }
+
         return $encodedData;
     }
 
@@ -378,6 +456,7 @@ class gChart
      * @var Integer
      */
     private $serverNum;
+
     /**
      * @brief Sets server number processing the chart.
      * @param $newServerNum Integer The server number. The function will scale this number to the range 0-9
@@ -386,6 +465,7 @@ class gChart
     {
         $this->serverNum = $newServerNum % 10;
     }
+
     /**
      * @brief Returns the server number processing the chart
      * @return Integer
@@ -410,6 +490,7 @@ class gChart
             $this->chart[$key] = $value;
         }
     }
+
 	/**
 	 * @brief Gets a chart property
 	 * @param $key String Name of the chart parameter
@@ -418,11 +499,12 @@ class gChart
 		if (isset($this->chart[$key]))
 			return ($this->chart[$key]);
 	}
+
     /**
      * @brief Sets chart dimensions.
      *
      * Sets chart dimension using chs parameter. This checks of $width and $height are
-     * defined because in gFormula 0s are used as default values to let the server
+     * defined because in imgFormula 0s are used as default values to let the server
      * autosize the final png image. If only $hegiht is not 0, then the server will use
      * this value as the height of the png image and will autosize the width.
      *
@@ -442,6 +524,7 @@ class gChart
             $this->setProperty('chs', $height);
         }
     }
+
     /**
      * @brief Sets the colors for element of the chart.
      *
@@ -454,6 +537,7 @@ class gChart
     {
         $this->setProperty('chco', $this->encodeData($this->getApplicableLabels($colors),","));
     }
+
     /**
      * @brief Sets the labels for the legend
      *
@@ -461,8 +545,9 @@ class gChart
      */
     public function setLegend($labels)
     {
-        $this->setProperty('chdl', urlencode($this->encodeData($this->getApplicableLabels($labels),"|")));
+        $this->setProperty('chdl', $this->encodeData($this->getApplicableLabels($labels),"|"));
     }
+
     /**
      * @brief Sets the position and the order of the legend
      *
@@ -480,6 +565,7 @@ class gChart
             $this->setProperty('chdlp', $position);
         }
     }
+
     /**
      * @brief Sets the title.
      *
@@ -493,6 +579,7 @@ class gChart
         $title = str_replace(" ", "+", $title);
         $this->setProperty('chtt', $title);
     }
+
     /**
      *	@brief Sets font size and color of the title
      *
@@ -503,6 +590,7 @@ class gChart
     {
         $this->setProperty('chts', $color.','.$size);
     }
+
     /**
      * @brief Specifies the size of the chart's margins, in pixels.
      *
@@ -519,6 +607,7 @@ class gChart
         if (!empty($legendMargins))
             $this->setProperty('chma', $this->encodeData($legendMargins, ','), true);
     }
+
     /**
      * @brief Sets visible axes.
      *
@@ -582,12 +671,26 @@ class gChart
      * Note that this does not change the axis range; to change the axis range, you must
      * use the setAxisRange function.
      *
-     * @param $startVal Integer A number, definig the low value for the data set. Usually, it is the same as $startVal in addAxisRange
-     * @param $endVal Integer A number, definig the high value for the data set. Usually, it is the same as $endVal in addAxisRange
+     * @param $startVal Integer|String A number, defining the low value for the data set. Usually, it is the same as
+     *                                 $startVal in addAxisRange. If this is an "a" then we'll set this to automatic
+     *                                 scaling:
+     *      https://documentation.image-charts.com/reference/data-format/#text-format-with-automatic-scaling
+     * @param $endVal Integer A number, defining the high value for the data set. Usually, it is the same as $endVal in
+     *                        addAxisRange
      */
-    public function setDataRange($startVal, $endVal)
+    public function setDataRange($startVal, $endVal = '')
     {
-        $this->setProperty('chds', $startVal.','.$endVal);
+        if ($startVal == 'a')
+            $this->setProperty('chds', 'a');
+        else {
+            if (!trim($endVal)) {
+                $msg = 'Uncaught ArgumentCountError: Too few arguments to function ' . __METHOD__ .'(), ' .
+                       func_num_args() . ' passed in ' . __FILE__ . ' on line ' . __LINE__ . ' and exactly 2 expected' .
+                       ' in ' . debug_print_backtrace();
+                trigger_error($msg, E_USER_ERROR);
+            } else
+                $this->setProperty('chds', $startVal.','.$endVal);
+        }
     }
     /**
      * @brief Adds the background fill
@@ -708,17 +811,9 @@ class gChart
      */
     public function getUrl()
     {
-        $fullUrl = "http://";
-        if(isset($this->serverNum))
-            $fullUrl .= $this->getServerNumber().".";
-        $fullUrl .= $this->baseUrl;
         $this->setDataSetString();
-        $parms = array();
-        foreach ($this->chart as $key => $value)
-        {
-            $parms[] = $key.'='.$value;
-        }
-        return $fullUrl.implode('&amp;', $parms);
+
+        return $this->baseUrl.$this->sign();
     }
 
     /**
@@ -730,7 +825,7 @@ class gChart
     {
         $code = '<img src="';
         $code .= $this->getUrl().'"';
-        $code .= 'alt="gChartPhp Chart" width='.$this->width.' height='.$this->height.'>';
+        $code .= 'alt="img-chart-php Chart" width='.$this->width.' height='.$this->height.'>';
         print($code);
     }
     /**
@@ -747,16 +842,78 @@ class gChart
 		header('Content-type: image/png');
 		if ($post) {
 			$this->setDataSetString();
-			$url = 'http://chart.apis.google.com/chart?chid=' . md5(uniqid(rand(), true));
 			$context = stream_context_create(
 				array('http' => array(
 					'method' => 'POST',
 					'header' => 'Content-type: application/x-www-form-urlencoded' . "\r\n",
-					'content' => urldecode(http_build_query($this->chart, '', '&')))));
-				fpassthru(fopen($url, 'r', false, $context));
+					'ignore_errors' => ((defined('IC_SHOW_ERRORS') && IC_SHOW_ERRORS) ? true : false),
+					'content' => $this->sign())));
+				fpassthru(fopen(substr($this->baseUrl, 0, -1), 'r', false, $context));
 		} else {
 			$url = str_replace('&amp;', '&', $this->getUrl());
 			readfile($url);
 		}
 	}
+
+	public function renderImageString($post = false, $encode = true) {
+        ob_start();
+        if ($post) {
+            $this->setDataSetString();
+            $context = stream_context_create(
+                array('http' => array(
+                    'method' => 'POST',
+                    'header' => 'Content-type: application/x-www-form-urlencoded' . "\r\n",
+                    'ignore_errors' => ((defined('IC_SHOW_ERRORS') && IC_SHOW_ERRORS) ? true : false),
+                    'content' => $this->sign())));
+            fpassthru(fopen(substr($this->baseUrl, 0, -1), 'r', false, $context));
+        } else {
+            $url = str_replace('&amp;', '&', $this->getUrl());
+            readfile($url);
+        }
+        $image = ob_get_contents();
+        $image = ($encode ? base64_encode($image) : $image);
+        ob_end_clean();
+
+        return $image;
+    }
+
+    /**
+     * @brief Returns the query string, if enterprise login information is found it returns the signed hash query string
+     *
+     *
+     *
+     * @return string
+     */
+	private function sign() {
+	    if (empty($this->ic_account_id) && empty($this->ic_secret_key)) {
+            // RFC3986 ensures spaces are correctly encoded as %20
+            $rawQueryString = http_build_query($this->chart, null, ini_get('arg_separator.output'), PHP_QUERY_RFC3986);
+
+            // decode parentheses gobbled up by the query builder
+            $rawQueryString = str_replace('%28', '(', $rawQueryString);
+            $rawQueryString = str_replace('%29', ')', $rawQueryString);
+
+            // imagecharts doesn't seem to like encoded asterisks, so let's decode them
+            $rawQueryString = str_replace('%2A', '*', $rawQueryString);
+
+            return $rawQueryString;
+        }
+
+	    $this->setProperty('icac', $this->ic_account_id);
+
+        // RFC3986 ensures spaces are correctly encoded as %20
+        $rawQueryString = http_build_query($this->chart, null, ini_get('arg_separator.output'), PHP_QUERY_RFC3986);
+
+        // decode parentheses gobbled up by the query builder
+        $rawQueryString = str_replace('%28', '(', $rawQueryString);
+        $rawQueryString = str_replace('%29', ')', $rawQueryString);
+
+        // imagecharts doesn't seem to like encoded asterisks, so let's decode them
+        $rawQueryString = str_replace('%2A', '*', $rawQueryString);
+
+	    $signature = hash_hmac('sha256', $rawQueryString, $this->ic_secret_key);
+	    error_log($rawQueryString . '&ichm=' . $signature);
+
+	    return $rawQueryString . '&ichm=' . $signature;
+    }
 }

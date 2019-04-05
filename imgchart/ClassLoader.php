@@ -1,22 +1,22 @@
 <?php
-namespace gchart;
+namespace imgchart;
 
 /**
- * SPL class loader for gChart classes.
+ * SPL class loader for imgChart classes.
  * Code taken from Pheanstalk https://github.com/pda/pheanstalk/blob/master/classes/Pheanstalk/ClassLoader.php and modified
  *
  */
 class ClassLoader
 {
-  const PACKAGE = 'gchart';
+  const PACKAGE = 'imgchart';
 
   private static $_path;
 
   /**
-   * Registers gChart_ClassLoader as an SPL class loader.
+   * Registers imgChart_ClassLoader as an SPL class loader.
    * Inserts self first, retains existing loaders and __autoload()
    *
-   * @param string $path Path to gChart
+   * @param string $path Path to imgChart
    */
   public static function register($path)
   {
@@ -33,7 +33,7 @@ class ClassLoader
   }
 
   /**
-   * Attempts to load a gChart class file.
+   * Attempts to load a imgChart class file.
    *
    * @param string $class
    * @see http://php.net/manual/en/function.spl-autoload-register.php

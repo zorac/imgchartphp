@@ -1,14 +1,16 @@
 <?php
-namespace gchart;
+namespace imgchart;
 /**
  * @brief Concentric Pie Chart
  */
-class gConcentricPieChart extends gPieChart
+class imgConcentricPieChart extends imgPieChart
 {
-    function __construct($width = 350, $height = 200)
+    function __construct($width = 350, $height = 200, $ic_account_id = null, $ic_secret_key = null)
     {
         $this->setProperty('cht', 'pc');
         $this->setDimensions($width, $height);
+        $this->setIcAccountId($ic_account_id);
+        $this->setIcSecretKey($ic_secret_key);
     }
     /**
      * @brief Returns the applicable labels for the chart.

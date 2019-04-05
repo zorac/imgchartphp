@@ -1,11 +1,11 @@
 <?php
-namespace gchart;
+namespace imgchart;
 
 
-class gBarChart extends gChart
+class imgBarChart extends imgChart
 {
     /**
-     * @brief Constructor for the gBarChart
+     * @brief Constructor for the imgBarChart
      *
      * With this constructor you can specify all the type of Bar Charts.
      *
@@ -13,11 +13,15 @@ class gBarChart extends gChart
      * @param $height Integer Height of the chart, in pixels. Default value is 200.
      * @param $type String Chooses the type of chart. Use 'g' for grouped chart, 's' for stacked, 'o' for overlapped
      * @param $direction String Chooses the direction of the chart. Use 'v' for vertical, 'h' for horizontal
+     * @param $ic_account_id String imagecharts enterprise account id
+     * @param $ic_secret_key String imagecharts enterprise secret key
      */
-    public function __construct($width = 200, $height = 200, $type = 'g', $direction='v')
+    public function __construct($width = 200, $height = 200, $type = 'g', $direction='v', $ic_account_id = null, $ic_secret_key = null)
     {
         $this->setChartType($type, $direction);
         $this->setDimensions($width, $height);
+        $this->setIcAccountId($ic_account_id);
+        $this->setIcSecretKey($ic_secret_key);
     }
     protected function setChartType($type, $direction)
     {

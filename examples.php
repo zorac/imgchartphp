@@ -1,5 +1,5 @@
 <?php
-namespace gchart;
+namespace imgchart;
 #ini_set('display_errors','1');
 ?>
 <html>
@@ -15,7 +15,7 @@ img { display:block; }
 <h1>Quick examples.</h1>
 
 <?php
-require_once(__DIR__ . "/gchart/gChartInit.php");
+require_once(__DIR__ . "/imgchart/imgChartInit.php");
 ?>
 <h2>Pie Chart</h2>
 <?php
@@ -38,7 +38,7 @@ $piChart->setColors(array("ff3344", "11ff11", "22aacc", "3333aa"));<br>
 </p>
 <h2>3D Pie Chart</h2>
 <?php
-$pie3dChart = new gPie3DChart();
+$pie3dChart = new imgPie3DChart();
 $pie3dChart->addDataSet(array(112,315,66,40));
 $pie3dChart->setLegend(array("first", "second", "third","fourth"));
 $pie3dChart->setLabels(array("first", "second", "third","fourth"));
@@ -57,7 +57,7 @@ $pie3dChart->setColors(array("ff3344", "11ff11", "22aacc", "3333aa"));<br>
 </p>
 <h2>Concentric Pie Chart</h2>
 <?php
-$CPChart = new gConcentricPieChart();
+$CPChart = new imgConcentricPieChart();
 $CPChart->addDataSet(array(112,315,66,40));
 $CPChart->addDataSet(array(100,235,346,50));
 $CPChart->addColors(array("008800", "880000"));
@@ -253,7 +253,7 @@ $barChart->setLegend(array("This", "is", "different"));<br>
 </p>
 <h2>Stacked Bar Chart</h2>
 <?php
-$barChart = new gStackedBarChart(450,350);
+$barChart = new imgStackedBarChart(450,350);
 $barChart->addDataSet(array(112,315,66,40));
 $barChart->addDataSet(array(212,115,366,140));
 $barChart->addDataSet(array(112,95,116,140));
@@ -289,7 +289,7 @@ $barChart->groupSpacerWidth = 10;
 </p>
 <h2>Funnel Bar Chart</h2>
 <?php
-$funnelChart = new gFunnelChart(800,230);
+$funnelChart = new imgFunnelChart(800,230);
 $funnelChart->addData(array(100, 75, 44, 42, 29, 3));
 $funnelChart->setColors(array("ffffff", "FF9900"));
 $funnelChart->setVisibleAxes(array('x','y'));
@@ -364,14 +364,14 @@ $latex -> setLatexCode('\cos(x)^2+\sin(x)^2=1');<br>
 <h2>QR Code</h2>
 <?php
 $qr = new gQRCode();
-$qr -> setQRCode('gChartPhp is awesome!');
+$qr -> setQRCode('imgChartPhp is awesome!');
 ?>
 <img src="<?php print $qr->getUrl();  ?>" /> <br> QR Code using the gQRCode class.
 <p>
 <em>code:</em><br>
 <code>
 $qr = new gQRCode();<br>
-$qr -> setQRCode('gChartPhp is awesome!');<br>
+$qr -> setQRCode('imgChartPhp is awesome!');<br>
 </code>
 </p>
 <h2>Google-o-Meter</h2>

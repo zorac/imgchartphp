@@ -1,16 +1,18 @@
 <?php
-namespace gchart;
-class gMapChart extends gChart
+namespace imgchart;
+class imgMapChart extends imgChart
 {
     /**
      * @brief Map Chart constructor.
      *
      * Maximum size for a map is 440x220, this is the defaul size.
      */
-    function __construct($width = 440, $height = 220)
+    function __construct($width = 440, $height = 220, $ic_account_id = null, $ic_secret_key = null)
     {
         $this->setDimensions($width, $height);
         $this->setProperty('cht','t');
+        $this->setIcAccountId($ic_account_id);
+        $this->setIcSecretKey($ic_secret_key);
     }
 
     /**

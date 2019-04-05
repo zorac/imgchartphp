@@ -1,16 +1,18 @@
 <?php
-namespace gchart;
-class gVennDiagram extends gChart
+namespace imgchart;
+class imgVennDiagram extends imgChart
 {
 
     private $sizes;
     private $intersections;
     private $numData;
 
-    function __construct($width = 200, $height = 200)
+    function __construct($width = 200, $height = 200, $ic_account_id = null, $ic_secret_key = null)
     {
         $this->setProperty('cht', 'v');
         $this->setDimensions($width, $height);
+        $this->setIcAccountId($ic_account_id);
+        $this->setIcSecretKey($ic_secret_key);
         $this->sizes = array(0,0,0);
         $this->intersections = array(0,0,0,0);
         $this->numData = 2;

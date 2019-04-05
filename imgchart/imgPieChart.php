@@ -1,11 +1,13 @@
 <?php
-namespace gchart;
-class gPieChart extends gChart
+namespace imgchart;
+class imgPieChart extends imgChart
 {
-    public function __construct($width = 350, $height = 200)
+    public function __construct($width = 350, $height = 200, $ic_account_id = null, $ic_secret_key = null)
     {
         $this->setProperty('cht', 'p');
         $this->setDimensions($width, $height);
+        $this->setIcAccountId($ic_account_id);
+        $this->setIcSecretKey($ic_secret_key);
     }
     public function getApplicableLabels($labels)
     {
@@ -55,7 +57,7 @@ class gPieChart extends gChart
      * @brief Sets the colors for element of the chart.
      *
      * This is the basic function. The data in the array are interpreted as one color one slice. If you are
-     * using gConcentricPieChart(), consider using setColors() for more customization.
+     * using imgConcentricPieChart(), consider using setColors() for more customization.
      *
      * @param $colors Array Specifies colors using a 6-character string of hexadecimal values,
      *                      plus two optional transparency values, in the format RRGGBB[AA].
