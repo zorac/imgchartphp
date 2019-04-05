@@ -56,7 +56,7 @@ Create a composer.json file in your project root:
 
      {
           "require": {
-               "obceneikon/imgchartphp": "dev-master"
+               "imgchart/imgchartphp": "dev-master"
           }
      }
      
