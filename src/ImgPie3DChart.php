@@ -1,9 +1,9 @@
 <?php
-namespace imgchart;
+namespace ImgChart;
 /**
  * @brief 3-dimensional Pie Chart
  */
-class imgPie3DChart extends imgPieChart
+class ImgPie3DChart extends imgPieChart
 {
     function __construct($width = 500, $height = 200, $ic_account_id = null, $ic_secret_key = null)
     {

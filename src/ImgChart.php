@@ -1,5 +1,5 @@
 <?php
-namespace imgchart;
+namespace ImgChart;
 /**
  * @brief Main class
  *
@@ -13,7 +13,7 @@ namespace imgchart;
  *      Update documentation
  */
 
-abstract class imgChart {
+abstract class ImgChart {
     /**
      * @brief This variable holds all the chart information.
      * @var array
@@ -226,7 +226,7 @@ abstract class imgChart {
             return $data;
 
         $encodedData = array();
-        $max = utility::getMaxOfArray($data);
+        $max = Utility::getMaxOfArray($data);
 
         if ($max > 100)
         {
@@ -261,7 +261,7 @@ abstract class imgChart {
     private function simpleEncodeData($data)
     {
         $encode_string='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        $max = utility::getMaxOfArray($data);
+        $max = Utility::getMaxOfArray($data);
         $encodedData = array();
         if ($max > 61)
         {
@@ -334,10 +334,10 @@ abstract class imgChart {
      *                   and default label values. All labels on the same axis have the same format. If you have
      *                   multiple copies of an axis, you can format each one differently. You can also specify the
      *                   format of a label string, for example to show currency symbols or trailing zeroes.
-     *                   By default, the top and bottom axes do not show tick marks by the values, while the left and 
+     *                   By default, the top and bottom axes do not show tick marks by the values, while the left and
      *                   right axes do show them.
      *
-     *                   Refer to official documentation at: 
+     *                   Refer to official documentation at:
      *                   http://code.google.com/apis/chart/image/docs/gallery/bar_charts.html#axis_labels
      */
     public function addAxisStyle($axisIndex, $axisStyle)
@@ -349,11 +349,11 @@ abstract class imgChart {
      * @brief Specifies the style of an axis.
      *
      * @param $axisIndex Integer This is a zero-based index into the axis array specified by setVisibleAxes
-     * @param $axisTickLength Integer You can specify long tick marks for specific axes. Typically this is 
-     *                        used to extend a tick mark across the length of a chart. Use the addAxisStyle() 
+     * @param $axisTickLength Integer You can specify long tick marks for specific axes. Typically this is
+     *                        used to extend a tick mark across the length of a chart. Use the addAxisStyle()
      *                        method to change the tick mark color.
      *
-     *                        Refer to official documentation at: 
+     *                        Refer to official documentation at:
      *                        http://code.google.com/apis/chart/image/docs/gallery/bar_charts.html#axis_labels
      */
     public function addAxisTickMarkStyle($axisIndex, $axisTickLength)
@@ -371,7 +371,7 @@ abstract class imgChart {
     private function extendedEncodeData($data)
     {
         $encode_string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.';
-        $max = utility::getMaxOfArray($data);
+        $max = Utility::getMaxOfArray($data);
         $encodedData = array();
 
         if ($max > 4095) {
@@ -504,7 +504,7 @@ abstract class imgChart {
      * @brief Sets chart dimensions.
      *
      * Sets chart dimension using chs parameter. This checks of $width and $height are
-     * defined because in imgFormula 0s are used as default values to let the server
+     * defined because in ImgFormula 0s are used as default values to let the server
      * autosize the final png image. If only $hegiht is not 0, then the server will use
      * this value as the height of the png image and will autosize the width.
      *

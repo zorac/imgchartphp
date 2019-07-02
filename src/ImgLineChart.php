@@ -1,6 +1,6 @@
 <?php
-namespace imgchart;
-class imgLineChart extends imgChart
+namespace ImgChart;
+class ImgLineChart extends ImgChart
 {
     public function __construct($width = 200, $height = 200, $ic_account_id = null, $ic_secret_key = null)
     {

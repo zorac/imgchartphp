@@ -1,6 +1,6 @@
 <?php
-namespace imgchart;
-class imgMapChart extends imgChart
+namespace ImgChart;
+class ImgMapChart extends ImgChart
 {
     /**
      * @brief Map Chart constructor.

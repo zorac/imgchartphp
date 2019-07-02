@@ -1,6 +1,6 @@
 <?php
-namespace imgchart;
-class imgFormula extends imgChart
+namespace ImgChart;
+class ImgFormula extends ImgChart
 {
     /**
      * @param $width Integer It is set by default to 0 because the server will size the png automatically

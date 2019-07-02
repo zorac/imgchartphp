@@ -1,6 +1,6 @@
 <?php
-namespace imgchart;
-class imgPieChart extends imgChart
+namespace ImgChart;
+class ImgPieChart extends ImgChart
 {
     public function __construct($width = 350, $height = 200, $ic_account_id = null, $ic_secret_key = null)
     {
@@ -57,7 +57,7 @@ class imgPieChart extends imgChart
      * @brief Sets the colors for element of the chart.
      *
      * This is the basic function. The data in the array are interpreted as one color one slice. If you are
-     * using imgConcentricPieChart(), consider using setColors() for more customization.
+     * using ImgConcentricPieChart(), consider using setColors() for more customization.
      *
      * @param $colors Array Specifies colors using a 6-character string of hexadecimal values,
      *                      plus two optional transparency values, in the format RRGGBB[AA].

@@ -1,6 +1,6 @@
 <?php
-namespace imgchart;
-class imgQRCode extends imgChart
+namespace ImgChart;
+class ImgQRCode extends ImgChart
 {
 
     function __construct($width = 150, $height = 150, $ic_account_id = null, $ic_secret_key = null)

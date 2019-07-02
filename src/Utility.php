@@ -1,12 +1,12 @@
 <?php
-namespace imgchart;
+namespace ImgChart;
 /**
  * @brief Utility class
  *
  * @version 0.2
  * @since 0.4
  */
-class utility
+class Utility
 {
     public static function getMaxOfArray($ArrayToCheck)
     {
@@ -16,7 +16,7 @@ class utility
         {
             if(is_array($temp))
             {
-                $maxValue = max($maxValue, utility::getMaxOfArray($temp));
+                $maxValue = max($maxValue, Utility::getMaxOfArray($temp));
             }
             else
             {

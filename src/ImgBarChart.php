@@ -1,11 +1,11 @@
 <?php
-namespace imgchart;
+namespace ImgChart;
 
 
-class imgBarChart extends imgChart
+class ImgBarChart extends ImgChart
 {
     /**
-     * @brief Constructor for the imgBarChart
+     * @brief Constructor for the ImgBarChart
      *
      * With this constructor you can specify all the type of Bar Charts.
      *

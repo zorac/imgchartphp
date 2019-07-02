@@ -1,6 +1,6 @@
 <?php
-namespace imgchart;
-class imgVennDiagram extends imgChart
+namespace ImgChart;
+class ImgVennDiagram extends ImgChart
 {
 
     private $sizes;

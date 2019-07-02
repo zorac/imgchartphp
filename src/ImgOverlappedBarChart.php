@@ -1,10 +1,10 @@
 <?php
-namespace imgchart;
-class imgGroupedBarChart extends imgBarChart
+namespace ImgChart;
+class ImgOverlappedBarChart extends ImgBarChart
 {
     function __construct($width = 200, $height = 200, $ic_account_id = null, $ic_secret_key = null)
     {
-        $this->setChartType('g', 'v');
+        $this->setChartType('o', 'v');
         $this->setDimensions($width, $height);
         $this->setIcAccountId($ic_account_id);
         $this->setIcSecretKey($ic_secret_key);
@@ -13,10 +13,11 @@ class imgGroupedBarChart extends imgBarChart
     {
         if($isHorizontal)
         {
-            $this->setChartType('g', 'h');
-        } else
+            $this->setChartType('o', 'h');
+        }
+        else
         {
-            $this->setChartType('g', 'v');
+            $this->setChartType('o', 'v');
         }
     }
 }

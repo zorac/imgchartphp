@@ -1,9 +1,9 @@
 <?php
-namespace imgchart;
+namespace ImgChart;
 /**
  * @brief Concentric Pie Chart
  */
-class imgConcentricPieChart extends imgPieChart
+class ImgConcentricPieChart extends ImgPieChart
 {
     function __construct($width = 350, $height = 200, $ic_account_id = null, $ic_secret_key = null)
     {

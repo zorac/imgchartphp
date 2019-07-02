@@ -1,6 +1,6 @@
 <?php
-namespace imgchart;
-class imgMeterChart extends imgChart
+namespace ImgChart;
+class ImgMeterChart extends ImgChart
 {
     /**
      * @brief Google-o-Meter Chart constructor.
