@@ -1,8 +1,8 @@
 {
-    "name": "imgchartphp/imgchartphp",
+    "name": "zorac/imgchartphp",
     "description": "PHP Object wrapper for imagecharts, the drop-in replacement for the Google Image Charts API.",
     "keywords": ["imagecharts", "image-charts", "Google Charts", "Google Image Charts", "wrapper", "php", "charts"],
-    "homepage": "https://github.com/obceneikon/imgChartPhp",
+    "homepage": "https://github.com/zorac/imgchartphp",
     "type": "library",
     "authors": [
         {
